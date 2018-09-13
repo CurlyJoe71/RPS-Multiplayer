@@ -10,7 +10,27 @@ var config = {
 };
 firebase.initializeApp(config);
 
+var displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData;
 
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      displayName = user.displayName;
+      email = user.email;
+      emailVerified = user.emailVerified;
+      photoURL = user.photoURL;
+      isAnonymous = user.isAnonymous;
+      uid = user.uid;
+      providerData = user.providerData;
+      // ...
+      console.log(displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData);
+      var playerOne = $('<span>Hello, ' + displayName + '! You\'re Player One!</span>');
+      $('#playerOneDisplay').append(playerOne);
+    } else {
+      // User is signed out.
+      // ...
+    }
+  });
 
 
 
