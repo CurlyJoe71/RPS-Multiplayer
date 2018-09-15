@@ -80,7 +80,6 @@ var updatePic = () => {
 }
 
 var updatePhoto = () => {
-    console.log($(this));
     avatarURL = avatar.attr('src');
     console.log(avatarURL);
     updatePic();

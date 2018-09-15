@@ -1,0 +1,15 @@
+.container {
+    display:flex;
+    flex-direction: row;
+    /* background: blue; */
+}
+
+.playerOneDisplay {
+    flex-direction: row;
+    background: blue;
+}
+
+img{
+    height: 200px;
+    width: auto;
+}
