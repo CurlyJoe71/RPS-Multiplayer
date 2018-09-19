@@ -8,7 +8,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var displayName, photoURL, avatarURL, div, images, avatarURL, avatar, playerOne, playerTwo, playerName, connectionsNumber, playerOneKey, playerTwoKey, player;
+var displayName, photoURL, avatarURL, div, images, avatarURL, avatar, playerOne, playerTwo, playerName, connectionsNumber, playerOneKey, playerTwoKey, player, source, name, description;
 var database = firebase.database();
 var avatarDiv = $('#avatarSelection');
 
@@ -43,20 +43,6 @@ connectedRef.on('value', function (snap) {
             console.log('playerTwoKey is: ' + playerTwoKey)
         };
 
-
-        // if (connectionsNumber === 1) {
-        //     playerOneRef.set({
-        //         playerName: 'testing',
-        //         avatar: '',
-        //         currentMove: ''
-        //     })
-        // }
-        // else if (connectionsNumber === 2) {
-        //     playerTwoRef.set({
-        //         playerName: '',
-        //         avatar: '',
-        //         currentMove: ''
-        //     })
         con.onDisconnect().remove();
     }
 });
@@ -157,11 +143,11 @@ var photoArray = ['https://vignette.wikia.nocookie.net/simpsons/images/5/57/Lisa
 var renderAvatars = () => {
     for (i = 0; i < 5; i++) {
         images = $('<img>');
-        var source = (testObject[i].URL);
-        var name = (testObject[i].name);
-        var description = (testObject[i].description);
+        source = (testObject[i].URL);
+        name = (testObject[i].name);
+        description = (testObject[i].description);
         images.attr({ 'src': source, 'height': '200px', 'width': 'auto' });
-        $('#avatarSelection').append('<div class="row"><div class="col s12 m6"><div class="card"><div class="card-image">' + '<img src=' + source + '><span class="yellow  light-blue-text card-content large">' + name + '</span><a class="btn-floating halfway-fab waves-effect waves-light red" data-value=' + name + '><i class="material-icons">+</i></a></div><br /><div class="card-content"><p>' + description + '</p></div></div></div></div>');
+        $('#avatarSelection').append('<div class="row"><div class="col s20 m6"><div class="card"><div class="card-image">' + '<img src=' + source + '><span class="yellow  light-blue-text card-content large">' + name + '</span><a class="btn-floating halfway-fab waves-effect waves-light red" data-value=' + name + '><i class="material-icons">+</i></a></div><br /><div class="card-content"><p>' + description + '</p></div></div></div></div>');
     };
     //adding a paragraph with description
     $('#avatarSelection').prepend('<div class="avatar-text"><p>Please select your avatar.<p><div>');
@@ -169,14 +155,34 @@ var renderAvatars = () => {
     $('.btn-floating').on('click', function () {
         console.log($(this));
         avatarURL = $(this).parent().find('img').attr('src');
-        console.log(avatar);
 
         updateDatabasePhoto();
-        //need to fun effect function
+        //need to run effect function
         runEffect2();
 
+        if(player === 1) {
+                    displayPlayerOne();
+        }
+        else {
+            displayPlayerTwo();
+        }
     }); //end of click event
 }; //end of render Avatars
+//function to run whenver the database is updated.
+
+
+function displayPlayerOne() {
+    $('#playerOneDisplay').toggle();
+$('#playerOneAvatar').attr('src', avatarURL);
+$('#playerOneName').text(playerName);
+$('#playerDisplayName').text(name);
+};
+function displayPlayerTwo() {
+    $('#playerTwoDisplay').toggle();
+$('#playerTwoAvatar').attr('src', avatarURL);
+$('#playerTwoName').text(playerName);
+$('#playerDisplayName').text(name);
+};
 
 function hideAvatarDiv() {
     var avatarDiv = $('#avatarSelection');
@@ -184,6 +190,9 @@ function hideAvatarDiv() {
 };
 
 $(document).ready(function () {
+    $('#playerOneDisplay').toggle();
+    $('#playerTwoDisplay').toggle();
+
     hideAvatarDiv();
     var input = document.getElementById("playerName");
 

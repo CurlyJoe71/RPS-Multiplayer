@@ -20,18 +20,59 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="assets/CSS/reset.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="assets/CSS/style.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="assets/Javascript/main.js"></script>
 </head>
 
 <body>
     <div class="container">
         <div id="playerOneDisplay" class="playerOneDisplay">
-
+            <h3>Player One</h3>
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="card">
+                        <div class="card-image">
+                            <img id="playerOneAvatar" style="height: 200px; width: auto">
+                            <span id="playerOneName" class="card-title"></span>
+                            <a class="btn-floating halfway-fab waves-effect waves-light cyan pulse"><i class="material-icons">landscape</i></a>
+                            <a class="btn-floating halfway-fab waves-effect waves-light cyan pulse"><i class="material-icons">note</i></a>
+                            <a class="btn-floating halfway-fab waves-effect waves-light cyan pulse"><i class="material-icons">content_cut</i></a>
+                        </div>
+                        <div class="card-content">
+                            <p id="playerDisplayName"></p>
+                            <p>Make your move...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="avatarSelection" class="container"></div>
 
         <div id="playerTwoDisplay">
+                <h3>Player Two</h3>
 
+            <div class="row">
+                <div class="col s5 m8">
+                    <div class="card">
+                        <div class="card-image">
+                            <img id="playerTwoAvatar" style="height: 300px; width: auto; align-self: center">
+                            <span id="playerTwoName" class="card-title yellow blue-text"></span>
+
+
+                        </div>
+                        <div class="card-content">
+                            <a class="btn-floating waves-effect waves-light cyan pulse"><i class="material-icons">landscape</i></a>
+                            
+                            <a class="btn-floating  waves-effect waves-light cyan pulse"><i class="material-icons">note</i></a>
+                            <a class="btn-floating  waves-effect waves-light cyan pulse"><i class="material-icons">content_cut</i></a>
+                            <p id="playerDisplayName"></p>
+                            <br />
+
+                            <p>Make your move...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
