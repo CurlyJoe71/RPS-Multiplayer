@@ -8,46 +8,83 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData, avatarURL, div, images, avatarURL, avatar, playerOne, playerTwo;
+var displayName, photoURL, avatarURL, div, images, avatarURL, avatar, playerOne, playerTwo, playerName, connectionsNumber, playerOneKey, playerTwoKey;
 var database = firebase.database();
-var user = firebase.auth().currentUser;
 
-// firebase.auth().onAuthStateChanged(function (user) {
-//     if (user) {
-//         // User is signed in.
-//         displayName = user.displayName;
-//         email = user.email;
-//         emailVerified = user.emailVerified;
-//         photoURL = user.photoURL;
-//         isAnonymous = user.isAnonymous;
-//         uid = user.uid;
-//         providerData = user.providerData;
-//         // ...
-//         console.log(displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData);
+//***CONNECTION CODE***//
+var connectionsRef = database.ref('/connections');
+var connectedRef = database.ref('.info/connected');
+var playerOneRef = database.ref('/connections/playerOne');
+var playerTwoRef = database.ref('/connections/playerTwo');
 
-//     } 
-//     else {
-//         // User is signed out.
-//         // ...
-//     }
-// });
+connectedRef.on('value', function (snap) {
+    connectionsRef.once('value').then(function (snap) {
+        connectionsNumber = snap.numChildren();
+        console.log('number is: ' + connectionsNumber);
+    });
+    if (snap.val()) {
+        if (connectionsNumber === 1) {
+            var con = connectionsRef.push({
+                playerName: '',
+                avatar: ''
+             });
+             playerOneKey = con.key;
+             console.log('playerOneKey is: ' + playerOneKey)
+        }
+        else {
+            var con = connectionsRef.push({
+               playerName: '',
+               avatar: ''
+            });
+            playerTwoKey = con.key;
+            console.log('playerTwoKey is: ' + playerTwoKey)
+        };
+
+
+        // if (connectionsNumber === 1) {
+        //     playerOneRef.set({
+        //         playerName: 'testing',
+        //         avatar: '',
+        //         currentMove: ''
+        //     })
+        // }
+        // else if (connectionsNumber === 2) {
+        //     playerTwoRef.set({
+        //         playerName: '',
+        //         avatar: '',
+        //         currentMove: ''
+        //     })
+        con.onDisconnect().remove();
+    }
+});
+//***END OF CONNECTION CODE***/
+
+//***USING JQUERY UI EFFECT***/
+function runEffect() {
+    // Run the effect
+    $("#effect").hide('bounce', 1000, callback);
+};
+// Callback function to bring a hidden box back
+function callback() {
+    setTimeout(function () {
+        $("#effect").removeAttr("style").hide().fadeIn();
+    }, 1000);
+    $('#effect').remove();
+};
+
+
 
 var updateDatabase = () => {
-    console.log('user is: ' + user);
-    console.log('displayname is: ' + displayName);
+    console.log('displayname is: ' + playerName);
 
-    if (firebase.database().ref('connections')) {
-        firebase.database().ref('playertwo').set({
-            playerName: displayName,
-            avatar: photoURL
-        })
-    }
-    else {
-        firebase.database().ref('playerone').set({
-            playerName: displayName,
-            avatar: photoURL
-        });
-    }
+    firebase.database().ref('/connections/playerOne').set({
+        playerName: playerName,
+        avatar: ''
+    })
+    // firebase.database().ref('playertwo').set({
+    //     playerName: playerName,
+    //     avatar: ''
+    // });
 };
 
 var photoArray = ['https://vignette.wikia.nocookie.net/simpsons/images/5/57/Lisa_Simpson2.png/revision/latest?cb=20180319000458', 'https://vignette.wikia.nocookie.net/simpsons/images/8/89/Maggie.png/revision/latest?cb=20090115172358', 'https://vignette.wikia.nocookie.net/simpsons/images/6/65/Bart_Simpson.png/revision/latest?cb=20180319061933', 'https://vignette.wikia.nocookie.net/simpsons/images/4/4d/MargeSimpson.png/revision/latest?cb=20180314071936', 'https://vignette.wikia.nocookie.net/simpsons/images/0/02/Homer_Simpson_2006.png/revision/latest?cb=20091207194310'];
@@ -57,45 +94,12 @@ var renderAvatars = () => {
         div = $('<div>');
         images = $('<img>');
         var source = (photoArray[i]);
-        images.attr('src', source);
+        images.attr({ 'src': source, 'height': '200px', 'width': 'auto' });
         div.append(images).attr('class', 'image');
 
         $('#avatarSelection').prepend(div);
     };
 };
-
-
-//***CONNECTION CODE***//
-var connectionsRef = database.ref('/connections');
-console.log(connectionsRef);
-
-var connectedRef = database.ref('.info/connected');
-
-connectedRef.on('value', function (snap) {
-    if (connectionsRef.length === 2) {
-        alert("There are already two players playing. Try again later.");
-    }
-
-    else if (snap.val()) {
-        var con = connectionsRef.push(true);
-        console.log(connectionsRef);
-        con.onDisconnect().remove();
-    }
-});
-//***END OF CONNECTION CODE***/
-
-var updatePic = () => {
-    var user = firebase.auth().currentUser;
-
-    user.updateProfile({
-        photoURL: avatarURL
-    }).then(function () {
-        // Update successful.
-    }).catch(function (error) {
-        // An error happened.
-    });
-    console.log(user);
-}
 
 var updatePhoto = () => {
     avatarURL = avatar.attr('src');
@@ -103,27 +107,27 @@ var updatePhoto = () => {
     updatePic();
 };
 
-firebase.database().ref().on('value', function(snap){
-    console.log(snap.val());
+// firebase.database().ref().on('value', function(snap){
+//     console.log(snap.val());
 
-    if(snap.child('playerone').exists()) {
-        console.log('playerone exists');
-        firebase.database().ref('playertwo').set({
-            playerName: displayName,
-            avatar: photoURL
-        });
-        playerTwo = $('<span>Hello, ' + displayName + '! You\'re Player Two!</span>');
-        $('#playerTwoDisplay').append(playerTwo);
-    }
-    else {
-        firebase.database().ref('playerone').set({
-            playerName: displayName,
-            avatar: photoURL
-        });
-        playerOne = $('<span>Hello, ' + displayName + '! You\'re Player One!</span>');
-        $('#playerOneDisplay').append(playerOne);
-    }
-});
+//     if(snap.child('playerone').exists()) {
+//         console.log('playerone exists');
+//         firebase.database().ref('playertwo').set({
+//             playerName: displayName,
+//             avatar: photoURL
+//         });
+//         playerTwo = $('<span>Hello, ' + displayName + '! You\'re Player Two!</span>');
+//         $('#playerTwoDisplay').append(playerTwo);
+//     }
+//     else {
+//         firebase.database().ref('playerone').set({
+//             playerName: displayName,
+//             avatar: photoURL
+//         });
+//         playerOne = $('<span>Hello, ' + displayName + '! You\'re Player One!</span>');
+//         $('#playerOneDisplay').append(playerOne);
+//     }
+// });
 
 
 $(document).ready(function () {
@@ -133,6 +137,31 @@ $(document).ready(function () {
         avatar = $(this)
         updatePhoto();
     }); //end of click event
+
+    var input = document.getElementById("playerName");
+
+    // Execute a function when the user releases a key on the keyboard
+    input.addEventListener("keyup", function (event) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Trigger the button element with a click
+
+            playerName = $(this).val().trim();
+            console.log(playerName);
+            // updateDatabase();
+            runEffect();
+            $('#playerName').val('');
+        }
+    });
+
+
+
+
+
+
+
 });
 
 //I need to take the curent user data and just move it over to the database.
