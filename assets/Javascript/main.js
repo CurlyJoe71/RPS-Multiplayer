@@ -75,6 +75,18 @@ function callback() {
     $('#nameSelection').remove();
 };
 
+//***USING JQUERY UI EFFECT***/
+function runEffect2() {
+    // Run the effect
+    $("#avatarSelection").hide('puff', 1000, callback2);
+};
+// Callback function to bring a hidden box back
+function callback2() {
+    setTimeout(function () {
+        $("#avatarSelection").removeAttr("style").hide().fadeIn();
+    }, 1000);
+    $('#avatarSelection').remove();
+};
 
 
 var updateDatabase = () => {
@@ -150,11 +162,6 @@ var renderAvatars = () => {
         var description = (testObject[i].description);
         images.attr({ 'src': source, 'height': '200px', 'width': 'auto' });
         $('#avatarSelection').append('<div class="row"><div class="col s12 m6"><div class="card"><div class="card-image">' + '<img src=' + source + '><span class="yellow  light-blue-text card-content large">' + name + '</span><a class="btn-floating halfway-fab waves-effect waves-light red" data-value=' + name + '><i class="material-icons">+</i></a></div><br /><div class="card-content"><p>' + description + '</p></div></div></div></div>');
-
-
-
-
-
     };
     //adding a paragraph with description
     $('#avatarSelection').prepend('<div class="avatar-text"><p>Please select your avatar.<p><div>');
@@ -165,38 +172,12 @@ var renderAvatars = () => {
         console.log(avatar);
 
         updateDatabasePhoto();
+        //need to fun effect function
+        runEffect2();
 
     }); //end of click event
 }; //end of render Avatars
 
-// var updatePhoto = () => {
-//     var avatarIndex = avatar.attr('data-value');
-//     console.log(avatarIndex);
-//     console.log('avatarURL : ' + avatarURL);
-//     updateDatabasePhoto();
-// };
-
-// firebase.database().ref().on('value', function(snap){
-//     console.log(snap.val());
-
-//     if(snap.child('playerone').exists()) {
-//         console.log('playerone exists');
-//         firebase.database().ref('playertwo').set({
-//             playerName: displayName,
-//             avatar: photoURL
-//         });
-//         playerTwo = $('<span>Hello, ' + displayName + '! You\'re Player Two!</span>');
-//         $('#playerTwoDisplay').append(playerTwo);
-//     }
-//     else {
-//         firebase.database().ref('playerone').set({
-//             playerName: displayName,
-//             avatar: photoURL
-//         });
-//         playerOne = $('<span>Hello, ' + displayName + '! You\'re Player One!</span>');
-//         $('#playerOneDisplay').append(playerOne);
-//     }
-// });
 function hideAvatarDiv() {
     var avatarDiv = $('#avatarSelection');
     avatarDiv.toggle();
