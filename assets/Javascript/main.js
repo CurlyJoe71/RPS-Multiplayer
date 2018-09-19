@@ -8,8 +8,9 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var displayName, photoURL, avatarURL, div, images, avatarURL, avatar, playerOne, playerTwo, playerName, connectionsNumber, playerOneKey, playerTwoKey;
+var displayName, photoURL, avatarURL, div, images, avatarURL, avatar, playerOne, playerTwo, playerName, connectionsNumber, playerOneKey, playerTwoKey, player;
 var database = firebase.database();
+var avatarDiv = $('#avatarSelection');
 
 //***CONNECTION CODE***//
 var connectionsRef = database.ref('/connections');
@@ -24,17 +25,19 @@ connectedRef.on('value', function (snap) {
     });
     if (snap.val()) {
         if (connectionsNumber === 1) {
+            player = 1;
             var con = connectionsRef.push({
                 playerName: '',
                 avatar: ''
-             });
-             playerOneKey = con.key;
-             console.log('playerOneKey is: ' + playerOneKey)
+            });
+            playerOneKey = con.key;
+            console.log('playerOneKey is: ' + playerOneKey)
         }
         else {
+            player = 2
             var con = connectionsRef.push({
-               playerName: '',
-               avatar: ''
+                playerName: '',
+                avatar: ''
             });
             playerTwoKey = con.key;
             console.log('playerTwoKey is: ' + playerTwoKey)
@@ -62,50 +65,116 @@ connectedRef.on('value', function (snap) {
 //***USING JQUERY UI EFFECT***/
 function runEffect() {
     // Run the effect
-    $("#effect").hide('bounce', 1000, callback);
+    $("#nameSelection").hide('bounce', 1000, callback);
 };
 // Callback function to bring a hidden box back
 function callback() {
     setTimeout(function () {
-        $("#effect").removeAttr("style").hide().fadeIn();
+        $("#nameSelection").removeAttr("style").hide().fadeIn();
     }, 1000);
-    $('#effect').remove();
+    $('#nameSelection').remove();
 };
 
 
 
 var updateDatabase = () => {
     console.log('displayname is: ' + playerName);
-
-    firebase.database().ref('/connections/playerOne').set({
-        playerName: playerName,
-        avatar: ''
-    })
-    // firebase.database().ref('playertwo').set({
-    //     playerName: playerName,
-    //     avatar: ''
-    // });
+    if (player === 1) {
+        firebase.database().ref('/connections/' + playerOneKey).set({
+            playerName: playerName,
+            avatar: '',
+            move: ''
+        })
+    }
+    else {
+        firebase.database().ref('/connections/' + playerTwoKey).set({
+            playerName: playerName,
+            avatar: '',
+            move: ''
+        })
+    }
 };
+
+var updateDatabasePhoto = () => {
+    if (player === 1) {
+        firebase.database().ref('/connections/' + playerOneKey).set({
+            playerName: playerName,
+            avatar: avatarURL,
+            move: ''
+        })
+    }
+    else {
+        firebase.database().ref('/connections/' + playerTwoKey).set({
+            playerName: playerName,
+            avatar: avatarURL,
+            move: ''
+        })
+    };
+};
+
+var testObject = {
+    '0': {
+        'name': 'Marge',
+        'URL': 'https://vignette.wikia.nocookie.net/simpsons/images/4/4d/MargeSimpson.png/revision/latest?cb=20180314071936',
+        'description': 'Marge is one tough Bouvier with hair that won\'t quit.'
+    },
+    '1': {
+        'name': 'Homer',
+        'URL': 'https://vignette.wikia.nocookie.net/simpsons/images/0/02/Homer_Simpson_2006.png/revision/latest?cb=20091207194310',
+        'description': 'Homer is your man if you\'re craving donuts.'
+    },
+    '2': {
+        'name': 'Bart',
+        'URL': 'https://vignette.wikia.nocookie.net/simpsons/images/6/65/Bart_Simpson.png/revision/latest?cb=20180319061933',
+        'description': 'Are you a rascal? You\'ll want to pick Bart.'
+    },
+    '3': {
+        'name': 'Lisa',
+        'URL': 'https://vignette.wikia.nocookie.net/simpsons/images/5/57/Lisa_Simpson2.png/revision/latest?cb=20180319000458',
+        'description': 'This little genius will guide you to victory.'
+    },
+    '4': {
+        'name': 'Maggie',
+        'URL': 'https://vignette.wikia.nocookie.net/simpsons/images/8/89/Maggie.png/revision/latest?cb=20090115172358',
+        'description': 'Don\'t let the pacifier fool you. Maggie is a tough baby.'
+    }
+}
 
 var photoArray = ['https://vignette.wikia.nocookie.net/simpsons/images/5/57/Lisa_Simpson2.png/revision/latest?cb=20180319000458', 'https://vignette.wikia.nocookie.net/simpsons/images/8/89/Maggie.png/revision/latest?cb=20090115172358', 'https://vignette.wikia.nocookie.net/simpsons/images/6/65/Bart_Simpson.png/revision/latest?cb=20180319061933', 'https://vignette.wikia.nocookie.net/simpsons/images/4/4d/MargeSimpson.png/revision/latest?cb=20180314071936', 'https://vignette.wikia.nocookie.net/simpsons/images/0/02/Homer_Simpson_2006.png/revision/latest?cb=20091207194310'];
 
 var renderAvatars = () => {
-    for (i = 0; i < photoArray.length; i++) {
-        div = $('<div>');
+    for (i = 0; i < 5; i++) {
         images = $('<img>');
-        var source = (photoArray[i]);
+        var source = (testObject[i].URL);
+        var name = (testObject[i].name);
+        var description = (testObject[i].description);
         images.attr({ 'src': source, 'height': '200px', 'width': 'auto' });
-        div.append(images).attr('class', 'image');
+        $('#avatarSelection').append('<div class="row"><div class="col s12 m6"><div class="card"><div class="card-image">' + '<img src=' + source + '><span class="yellow  light-blue-text card-content large">' + name + '</span><a class="btn-floating halfway-fab waves-effect waves-light red" data-value=' + name + '><i class="material-icons">+</i></a></div><br /><div class="card-content"><p>' + description + '</p></div></div></div></div>');
 
-        $('#avatarSelection').prepend(div);
+
+
+
+
     };
-};
+    //adding a paragraph with description
+    $('#avatarSelection').prepend('<div class="avatar-text"><p>Please select your avatar.<p><div>');
 
-var updatePhoto = () => {
-    avatarURL = avatar.attr('src');
-    console.log(avatarURL);
-    updatePic();
-};
+    $('.btn-floating').on('click', function () {
+        console.log($(this));
+        avatarURL = $(this).parent().find('img').attr('src');
+        console.log(avatar);
+
+        updateDatabasePhoto();
+
+    }); //end of click event
+}; //end of render Avatars
+
+// var updatePhoto = () => {
+//     var avatarIndex = avatar.attr('data-value');
+//     console.log(avatarIndex);
+//     console.log('avatarURL : ' + avatarURL);
+//     updateDatabasePhoto();
+// };
 
 // firebase.database().ref().on('value', function(snap){
 //     console.log(snap.val());
@@ -128,16 +197,13 @@ var updatePhoto = () => {
 //         $('#playerOneDisplay').append(playerOne);
 //     }
 // });
-
+function hideAvatarDiv() {
+    var avatarDiv = $('#avatarSelection');
+    avatarDiv.toggle();
+};
 
 $(document).ready(function () {
-    renderAvatars();
-    $('img').on('click', function () {
-        console.log($(this));
-        avatar = $(this)
-        updatePhoto();
-    }); //end of click event
-
+    hideAvatarDiv();
     var input = document.getElementById("playerName");
 
     // Execute a function when the user releases a key on the keyboard
@@ -153,8 +219,13 @@ $(document).ready(function () {
             // updateDatabase();
             runEffect();
             $('#playerName').val('');
+            updateDatabase();
         }
     });
+    $('#nameSelection').on('remove', function () {
+        hideAvatarDiv();
+        renderAvatars();
+    })
 
 
 
@@ -164,11 +235,11 @@ $(document).ready(function () {
 
 });
 
-//I need to take the curent user data and just move it over to the database.
+        //I need to take the curent user data and just move it over to the database.
 
-//I ended up getting rid of the auth part of the app.
+        //I ended up getting rid of the auth part of the app.
 
 
-// If there isn't anything at child index 0, then all of this is player one information.
-//The next person to logs in, but if there is already a spot at index 0, then get pushed to index 1, and then their information is player two information.
+        // If there isn't anything at child index 0, then all of this is player one information.
+        //The next person to logs in, but if there is already a spot at index 0, then get pushed to index 1, and then their information is player two information.
 // 

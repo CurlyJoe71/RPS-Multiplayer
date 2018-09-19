@@ -9,15 +9,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
     <!-- Firebase Reference -->
     <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
-    <!-- Moment.js Reference -->
     <!-- <script src="http://momentjs.com/downloads/moment.js"></script> -->
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
-   <!-- Compiled and minified CSS -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-   <!-- Compiled and minified JavaScript -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <link rel="stylesheet" type="text/css" media="screen" href="assets/CSS/reset.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="assets/CSS/style.css" />
@@ -38,8 +37,11 @@
 
 
 
-        <div class="row">
-            <div id="effect" class="col s12 m7">
+        <div id="middle" class="row">
+            <div id="avatarSelection" class="container" style="display: none">
+            </div>
+
+            <div id="nameSelection" class="col s12 m7">
                 <div class="card">
                     <div class="card-image">
                         <img src="https://www.iconspng.com/images/rockpaperscissors/rockpaperscissors.jpg">
@@ -50,8 +52,8 @@
                     </div>
                     <div class="card-action">
                         <!-- <form> -->
-                            <input placeholder="Player One" id="playerName" type="text" class="validate">
-                            <label for="playerName">Player Name</label>
+                        <input placeholder="Player One" id="playerName" type="text" class="validate">
+                        <label for="playerName">Player Name</label>
                         </form>
                     </div>
                 </div>
@@ -63,7 +65,6 @@
 
 
     </div> <!-- end of container div-->
-
 </body>
 
 </html>
